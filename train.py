@@ -17,7 +17,8 @@ from methods.protonet import ProtoNet
 from methods.matchingnet import MatchingNet
 from methods.relationnet import RelationNet
 from methods.maml import MAML
-from io_utils import model_dict, parse_args, get_resume_file  
+from io_utils import model_dict, parse_args, get_resume_file
+from utils import to_cuda, set_cuda
 
 def train(base_loader, val_loader, model, optimization, start_epoch, stop_epoch, params):    
     if optimization == 'Adam':
@@ -51,6 +52,7 @@ def train(base_loader, val_loader, model, optimization, start_epoch, stop_epoch,
 if __name__=='__main__':
     np.random.seed(10)
     params = parse_args('train')
+    set_cuda(params.cuda)
 
 
     if params.dataset == 'cross':
@@ -153,7 +155,7 @@ if __name__=='__main__':
     else:
        raise ValueError('Unknown method')
 
-    model = model.cuda()
+    model = to_cuda(model)
 
     params.checkpoint_dir = '%s/checkpoints/%s/%s_%s' %(configs.save_dir, params.dataset, params.model, params.method)
     if params.train_aug:

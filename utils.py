@@ -1,6 +1,35 @@
 import torch
 import numpy as np
 
+
+DEVICE = None
+IS_CUDA = None
+
+def set_cuda(flag):
+    global DEVICE
+    global IS_CUDA
+
+    if flag:
+        DEVICE = torch.device('cuda')
+        IS_CUDA = True
+    else:
+        DEVICE = torch.device('cpu')
+        IS_CUDA = False
+
+
+def is_cuda():
+    assert IS_CUDA is not None, 'Please set device with set_cuda()'
+    return IS_CUDA
+
+
+def to_cuda(x):
+    assert DEVICE is not None, 'Please set device with set_cuda()'
+    if x is None:
+        return None
+    else:
+        return x.to(DEVICE)
+
+
 def one_hot(y, num_class):         
     return torch.zeros((len(y), num_class)).scatter_(1, y.unsqueeze(1), 1)
 

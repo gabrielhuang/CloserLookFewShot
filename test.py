@@ -21,6 +21,7 @@ from methods.matchingnet import MatchingNet
 from methods.relationnet import RelationNet
 from methods.maml import MAML
 from io_utils import model_dict, parse_args, get_resume_file, get_best_file , get_assigned_file
+from utils import to_cuda, set_cuda
 
 def feature_evaluation(cl_data_file, model, n_way = 5, n_support = 5, n_query = 15, adaptation = False):
     class_list = cl_data_file.keys()
@@ -46,6 +47,7 @@ def feature_evaluation(cl_data_file, model, n_way = 5, n_support = 5, n_query = 
 
 if __name__ == '__main__':
     params = parse_args('test')
+    set_cuda(params.cuda)
 
     acc_all = []
 
@@ -89,7 +91,7 @@ if __name__ == '__main__':
     else:
        raise ValueError('Unknown method')
 
-    model = model.cuda()
+    model = to_cuda(model)
 
     checkpoint_dir = '%s/checkpoints/%s/%s_%s' %(configs.save_dir, params.dataset, params.model, params.method)
     if params.train_aug:

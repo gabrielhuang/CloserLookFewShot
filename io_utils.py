@@ -3,6 +3,7 @@ import os
 import glob
 import argparse
 import backbone
+import torch
 
 model_dict = dict(
             Conv4 = backbone.Conv4,
@@ -12,7 +13,8 @@ model_dict = dict(
             ResNet18 = backbone.ResNet18,
             ResNet34 = backbone.ResNet34,
             ResNet50 = backbone.ResNet50,
-            ResNet101 = backbone.ResNet101) 
+            ResNet101 = backbone.ResNet101)
+
 
 def parse_args(script):
     parser = argparse.ArgumentParser(description= 'few-shot script %s' %(script))
@@ -23,6 +25,7 @@ def parse_args(script):
     parser.add_argument('--test_n_way'  , default=5, type=int,  help='class num to classify for testing (validation) ') #baseline and baseline++ only use this parameter in finetuning
     parser.add_argument('--n_shot'      , default=5, type=int,  help='number of labeled data in each class, same as n_support') #baseline and baseline++ only use this parameter in finetuning
     parser.add_argument('--train_aug'   , action='store_true',  help='perform data augmentation or not during training ') #still required for save_features.py and test.py to find the model path correctly
+    parser.add_argument('--cuda', default=1, type=int, help='Use CUDA')
 
     if script == 'train':
         parser.add_argument('--num_classes' , default=200, type=int, help='total number of classes in softmax, only used in baseline') #make it larger than the maximum label value in base class
